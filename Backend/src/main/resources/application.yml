@@ -1,1 +1,3 @@
-spring.application.name=Backend
+logging:
+  level:
+    com.github.cichyvx.openmath: debug
