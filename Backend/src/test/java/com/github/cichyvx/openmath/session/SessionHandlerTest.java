@@ -51,7 +51,7 @@ public class SessionHandlerTest {
     @Test
     @Order(3)
     void shouldThrowIllegalArgumentExceptionWhenSessionIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new SessionHandler.UserData(null, "user1"));
+        assertThrows(IllegalArgumentException.class, () -> new SessionHandler.UserData(null, "user1", null));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class SessionHandlerTest {
     void shouldThrowDeserializationErrorWhenUsernameIsNull() {
         WebSocketSession session = mock(WebSocketSession.class);
 
-        DeserializationError exception = assertThrows(DeserializationError.class, () -> new SessionHandler.UserData(session, null));
+        DeserializationError exception = assertThrows(DeserializationError.class, () -> new SessionHandler.UserData(session, null, null));
         assertEquals("username", exception.getMessage());
     }
 
@@ -68,7 +68,7 @@ public class SessionHandlerTest {
     void shouldThrowDeserializationErrorWhenUsernameIsEmpty() {
         WebSocketSession session = mock(WebSocketSession.class);
 
-        DeserializationError exception = assertThrows(DeserializationError.class, () -> new SessionHandler.UserData(session, ""));
+        DeserializationError exception = assertThrows(DeserializationError.class, () -> new SessionHandler.UserData(session, "", null));
         assertEquals("username", exception.getMessage());
     }
 }

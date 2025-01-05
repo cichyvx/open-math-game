@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -17,21 +18,34 @@ public class SessionHandler {
     private final static Logger log = LoggerFactory.getLogger(SessionHandler.class);
     private final static Map<String, UserData> sessions = new ConcurrentHashMap<>();
 
-    public void registerSession(WebSocketSession session, ConnectionRequest data) {
+    public UserData registerSession(WebSocketSession session, ConnectionRequest data) {
         String username = data.username();
 
-        UserData userData = new UserData(session, username);
+        UserData userData = new UserData(session, username, UserState.CONNECTED);
 
-        sessions.merge(session.getId(), userData, ((userData1, userData2) -> {
+        var result = sessions.merge(session.getId(), userData, ((userData1, userData2) -> {
             log.error("Session already exists: {} --- {}", userData1.session().getId(), userData2.session().getId());
             throw new SessionAlreadyExists();
         }));
 
         log.debug("Registered session: {} for user: {}", session.getId(), username);
+
+        return userData;
     }
 
-    record UserData(WebSocketSession session, String username) {
-        UserData {
+    public Optional<UserData> getSession(String sessionId) {
+        return Optional.ofNullable(sessions.get(sessionId));
+    }
+
+    public Optional<UserData> changeUserState(String sessionId, UserState state) {
+        return Optional.ofNullable(sessions.computeIfPresent(
+                sessionId,
+                ((s, userData) -> new UserData(userData.session(), userData.username(), state))
+        ));
+    }
+
+    public record UserData(WebSocketSession session, String username, UserState state) {
+        public UserData {
             if (session == null) {
                 throw new IllegalArgumentException("session");
             }
