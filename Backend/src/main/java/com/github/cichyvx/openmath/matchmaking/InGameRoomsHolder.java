@@ -5,11 +5,10 @@ import com.github.cichyvx.openmath.game.MatchRoom;
 import com.github.cichyvx.openmath.game.Score;
 import com.github.cichyvx.openmath.model.AnswerRequest;
 import com.github.cichyvx.openmath.model.AnswerResponse;
+import com.github.cichyvx.openmath.model.StatusChangeResponse;
 import com.github.cichyvx.openmath.session.SessionHandler;
 import com.github.cichyvx.openmath.session.UserState;
-import com.github.cichyvx.openmath.wsproducer.AnswerSender;
-import com.github.cichyvx.openmath.wsproducer.QuestionProducer;
-import com.github.cichyvx.openmath.wsproducer.StatusChangeProducer;
+import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -30,16 +29,11 @@ public class InGameRoomsHolder {
     private final static Map<String, MatchRoom> matchRoomsMap = new ConcurrentHashMap<>();
     private static final Logger log = LoggerFactory.getLogger(InGameRoomsHolder.class);
     private final SessionHandler sessionHandler;
-    private final StatusChangeProducer statusChangeProducer;
-    private final QuestionProducer questionProducer;
-    private final AnswerSender answerSender;
+    private final WebSocketMessageSender webSocketMessageSender;
 
-    public InGameRoomsHolder(SessionHandler sessionHandler, StatusChangeProducer statusChangeProducer,
-                             QuestionProducer questionProducer, AnswerSender answerSender) {
+    public InGameRoomsHolder(SessionHandler sessionHandler, WebSocketMessageSender webSocketMessageSender) {
         this.sessionHandler = sessionHandler;
-        this.statusChangeProducer = statusChangeProducer;
-        this.questionProducer = questionProducer;
-        this.answerSender = answerSender;
+        this.webSocketMessageSender = webSocketMessageSender;
     }
 
     @Async
@@ -77,8 +71,8 @@ public class InGameRoomsHolder {
         var status1 = sessionHandler.changeUserState(session1.getId(), UserState.CONNECTED).orElseThrow();
         var status2 = sessionHandler.changeUserState(session2.getId(), UserState.CONNECTED).orElseThrow();
 
-        statusChangeProducer.sendStatusChange(session1, status1.state());
-        statusChangeProducer.sendStatusChange(session2, status2.state());
+        webSocketMessageSender.sendMessage(session1.getId(), new StatusChangeResponse(status1.state()));
+        webSocketMessageSender.sendMessage(session2.getId(), new StatusChangeResponse(status2.state()));
     }
 
     public void add(Room room) {
@@ -88,10 +82,10 @@ public class InGameRoomsHolder {
         WebSocketSession session1 = status1.session();
         WebSocketSession session2 = status2.session();
 
-        statusChangeProducer.sendStatusChange(session1, status1.state());
-        statusChangeProducer.sendStatusChange(session2, status1.state());
+        webSocketMessageSender.sendMessage(session1.getId(), new StatusChangeResponse(status1.state()));
+        webSocketMessageSender.sendMessage(session2.getId(), new StatusChangeResponse(status2.state()));
 
-        Loop gameLoop = new Loop(session1, session2, questionProducer);
+        Loop gameLoop = new Loop(session1, session2, webSocketMessageSender);
         Score score = new Score(room.session1(), room.session2());
         MatchRoom matchRoom = new MatchRoom(gameLoop, Instant.now().plus(1L, ChronoUnit.MINUTES), score, session1, session2);
 
@@ -119,8 +113,8 @@ public class InGameRoomsHolder {
             int score1 = score.getScore(session1.getId());
             int score2 = score.getScore(session2.getId());
 
-            answerSender.sendAnswer(session1, new AnswerResponse(score1, score2));
-            answerSender.sendAnswer(session2, new AnswerResponse(score2, score1));
+            webSocketMessageSender.sendMessage(session1.getId(), new AnswerResponse(score1, score2));
+            webSocketMessageSender.sendMessage(session2.getId(), new AnswerResponse(score2, score1));
         }
     }
 

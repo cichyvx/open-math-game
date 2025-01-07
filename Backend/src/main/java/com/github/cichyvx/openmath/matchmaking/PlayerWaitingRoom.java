@@ -1,7 +1,8 @@
 package com.github.cichyvx.openmath.matchmaking;
 
+import com.github.cichyvx.openmath.model.GameInfoResponse;
 import com.github.cichyvx.openmath.session.SessionHandler;
-import com.github.cichyvx.openmath.wsproducer.GameStartInfoProducer;
+import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,14 +19,14 @@ public class PlayerWaitingRoom {
     private static final Logger log = LoggerFactory.getLogger(PlayerWaitingRoom.class);
     public static final long SECONDS_TO_WAIT = 5L;
     private final InGameRoomsHolder inGameRoomsHolder;
-    private final GameStartInfoProducer gameStartInfoProducer;
     private final SessionHandler sessionHandler;
+    private final WebSocketMessageSender webSocketMessageSender;
 
-    public PlayerWaitingRoom(InGameRoomsHolder inGameRoomsHolder, GameStartInfoProducer gameStartInfoProducer,
-                             SessionHandler sessionHandler) {
+    public PlayerWaitingRoom(InGameRoomsHolder inGameRoomsHolder,
+                             SessionHandler sessionHandler, WebSocketMessageSender webSocketMessageSender) {
         this.inGameRoomsHolder = inGameRoomsHolder;
-        this.gameStartInfoProducer = gameStartInfoProducer;
         this.sessionHandler = sessionHandler;
+        this.webSocketMessageSender = webSocketMessageSender;
     }
 
     public void add(String session1, String session2) {
@@ -35,8 +36,8 @@ public class PlayerWaitingRoom {
         SessionHandler.UserData userData1 = sessionHandler.getSession(room.session1()).orElseThrow();
         SessionHandler.UserData userData2 = sessionHandler.getSession(room.session2()).orElseThrow();
 
-        gameStartInfoProducer.sendGameInfo(userData1.session(), room, userData2);
-        gameStartInfoProducer.sendGameInfo(userData2.session(), room, userData1);
+        webSocketMessageSender.sendMessage(room.session1(), new GameInfoResponse(userData2.username(), room.eventTime()));
+        webSocketMessageSender.sendMessage(room.session2(), new GameInfoResponse(userData1.username(), room.eventTime()));
     }
 
     @Scheduled(fixedRate = 10L)

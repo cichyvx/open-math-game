@@ -1,8 +1,9 @@
 package com.github.cichyvx.openmath.matchmaking;
 
+import com.github.cichyvx.openmath.model.StatusChangeResponse;
 import com.github.cichyvx.openmath.session.SessionHandler;
 import com.github.cichyvx.openmath.session.UserState;
-import com.github.cichyvx.openmath.wsproducer.StatusChangeProducer;
+import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,14 +15,14 @@ public class PlayerMatcher {
     private static final Logger log = LoggerFactory.getLogger(PlayerMatcher.class);
     private final PlayerRegistration playerRegistration;
     private final SessionHandler sessionHandler;
-    private final StatusChangeProducer statusChangeProducer;
+    private final WebSocketMessageSender webSocketMessageSender;
     private final PlayerWaitingRoom playerWaitingRoom;
 
     protected PlayerMatcher(PlayerRegistration playerRegistration, SessionHandler sessionHandler,
-                            StatusChangeProducer statusChangeProducer, PlayerWaitingRoom playerWaitingRoom) {
+                            WebSocketMessageSender webSocketMessageSender, PlayerWaitingRoom playerWaitingRoom) {
         this.playerRegistration = playerRegistration;
         this.sessionHandler = sessionHandler;
-        this.statusChangeProducer = statusChangeProducer;
+        this.webSocketMessageSender = webSocketMessageSender;
         this.playerWaitingRoom = playerWaitingRoom;
     }
 
@@ -37,8 +38,8 @@ public class PlayerMatcher {
             var user1 = sessionHandler.changeUserState(session1, UserState.WAITING_FOR_GAME_START).orElseThrow();
             var user2 = sessionHandler.changeUserState(session2, UserState.WAITING_FOR_GAME_START).orElseThrow();
 
-            statusChangeProducer.sendStatusChange(user1.session(), user1.state());
-            statusChangeProducer.sendStatusChange(user2.session(), user2.state());
+            webSocketMessageSender.sendMessage(session1, new StatusChangeResponse(user1.state()));
+            webSocketMessageSender.sendMessage(session2, new StatusChangeResponse(user2.state()));
 
             playerWaitingRoom.add(session1, session2);
         } else {

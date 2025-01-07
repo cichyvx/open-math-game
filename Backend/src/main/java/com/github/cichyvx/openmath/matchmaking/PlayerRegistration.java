@@ -2,9 +2,10 @@ package com.github.cichyvx.openmath.matchmaking;
 
 import com.github.cichyvx.openmath.exception.AlreadyWaitingInMatchMakingException;
 import com.github.cichyvx.openmath.exception.WrongUserState;
+import com.github.cichyvx.openmath.model.StatusChangeResponse;
 import com.github.cichyvx.openmath.session.SessionHandler;
 import com.github.cichyvx.openmath.session.UserState;
-import com.github.cichyvx.openmath.wsproducer.StatusChangeProducer;
+import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -21,11 +22,11 @@ public class PlayerRegistration {
 
     public static final String WRONG_USER_STATE_MESSAGE = "bad current user status for starting matchmaking. Current user status is %s, it should be " + UserState.CONNECTED;
     private final SessionHandler sessionHandler;
-    private final StatusChangeProducer statusChangeProducer;
+    private final WebSocketMessageSender webSocketMessageSender;
 
-    public PlayerRegistration(SessionHandler sessionHandler, StatusChangeProducer statusChangeProducer) {
+    public PlayerRegistration(SessionHandler sessionHandler, WebSocketMessageSender webSocketMessageSender) {
         this.sessionHandler = sessionHandler;
-        this.statusChangeProducer = statusChangeProducer;
+        this.webSocketMessageSender = webSocketMessageSender;
     }
 
     public void add(String sessionId) {
@@ -37,7 +38,7 @@ public class PlayerRegistration {
         } else if (waitingSessionsSet.add(waitingSession)) {
             waitingSessionIdsQueue.offer(waitingSession);
             userData = sessionHandler.changeUserState(sessionId, UserState.MATCHMAKING).orElseThrow();
-            statusChangeProducer.sendStatusChange(userData.session(), userData.state());
+            webSocketMessageSender.sendMessage(sessionId, new StatusChangeResponse(userData.state()));
         } else {
             throw new AlreadyWaitingInMatchMakingException();
         }

@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.matchmaking;
 
 import com.github.cichyvx.openmath.session.SessionHandler;
-import com.github.cichyvx.openmath.wsproducer.GameStartInfoProducer;
+import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,16 +18,16 @@ import static org.mockito.Mockito.when;
 public class PlayerWaitingRoomTest {
 
     private InGameRoomsHolder inGameRoomsHolder;
-    private GameStartInfoProducer gameStartInfoProducer;
+    private WebSocketMessageSender webSocketMessageSender;
     private SessionHandler sessionHandler;
     private PlayerWaitingRoom subject;
 
     @BeforeEach
     public void setUp() {
         inGameRoomsHolder = mock(InGameRoomsHolder.class);
-        gameStartInfoProducer = mock(GameStartInfoProducer.class);
+        webSocketMessageSender = mock(WebSocketMessageSender.class);
         sessionHandler = mock(SessionHandler.class);
-        subject = new PlayerWaitingRoom(inGameRoomsHolder, gameStartInfoProducer, sessionHandler);
+        subject = new PlayerWaitingRoom(inGameRoomsHolder, sessionHandler, webSocketMessageSender);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class PlayerWaitingRoomTest {
         subject.addAsStarted();
         verify(inGameRoomsHolder, times(0)).add(any());
 
-        TimeUnit.SECONDS.sleep(PlayerWaitingRoom.SECONDS_TO_WAIT);
+        TimeUnit.SECONDS.sleep(PlayerWaitingRoom.SECONDS_TO_WAIT + 1L);
 
         subject.addAsStarted();
         verify(inGameRoomsHolder, times(1)).add(any());
