@@ -2,6 +2,7 @@ package com.github.cichyvx.openmath.wslistener;
 
 import com.github.cichyvx.openmath.model.ConnectionRequest;
 import com.github.cichyvx.openmath.session.SessionHandler;
+import com.github.cichyvx.openmath.wsproducer.StatusChangeProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.socket.WebSocketSession;
@@ -16,11 +17,13 @@ public class ConnectionListenerTest {
 
     private ConnectionListener subject;
     private SessionHandler sessionHandler;
+    private StatusChangeProducer statusChangeProducer;
 
     @BeforeEach
     public void setUp() {
         sessionHandler = mock(SessionHandler.class);
-        subject = new ConnectionListener(sessionHandler);
+        statusChangeProducer = mock(StatusChangeProducer.class);
+        subject = new ConnectionListener(sessionHandler, statusChangeProducer);
     }
 
     @Test

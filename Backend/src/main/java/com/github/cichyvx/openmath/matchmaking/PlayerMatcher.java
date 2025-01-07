@@ -15,12 +15,14 @@ public class PlayerMatcher {
     private final PlayerRegistration playerRegistration;
     private final SessionHandler sessionHandler;
     private final StatusChangeProducer statusChangeProducer;
+    private final PlayerWaitingRoom playerWaitingRoom;
 
     protected PlayerMatcher(PlayerRegistration playerRegistration, SessionHandler sessionHandler,
-                            StatusChangeProducer statusChangeProducer) {
+                            StatusChangeProducer statusChangeProducer, PlayerWaitingRoom playerWaitingRoom) {
         this.playerRegistration = playerRegistration;
         this.sessionHandler = sessionHandler;
         this.statusChangeProducer = statusChangeProducer;
+        this.playerWaitingRoom = playerWaitingRoom;
     }
 
     @Scheduled(fixedRate = 1000L)
@@ -37,6 +39,8 @@ public class PlayerMatcher {
 
             statusChangeProducer.sendStatusChange(user1.session(), user1.state());
             statusChangeProducer.sendStatusChange(user2.session(), user2.state());
+
+            playerWaitingRoom.add(session1, session2);
         } else {
             log.debug("not found any matching players pair");
         }
