@@ -1,7 +1,6 @@
 package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.model.ErrorData;
-import com.github.cichyvx.openmath.util.WebSocketDeserializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

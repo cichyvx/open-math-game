@@ -1,4 +1,4 @@
-package com.github.cichyvx.openmath.session;
+package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.exception.DeserializationError;
 import com.github.cichyvx.openmath.exception.SessionAlreadyExists;
@@ -18,14 +18,19 @@ public class SessionHandler {
     private final static Logger log = LoggerFactory.getLogger(SessionHandler.class);
     private final static Map<String, UserData> sessions = new ConcurrentHashMap<>();
 
-    public UserData registerSession(WebSocketSession session, ConnectionRequest data) {
+    public UserData registerSession(String sessionId, ConnectionRequest data) {
+        WebSocketSession session = sessions.get(sessionId).session();
+
         String username = data.username();
 
         UserData userData = new UserData(session, username, UserState.CONNECTED);
 
-        var result = sessions.merge(session.getId(), userData, ((userData1, userData2) -> {
-            log.error("Session already exists: {} --- {}", userData1.session().getId(), userData2.session().getId());
-            throw new SessionAlreadyExists();
+        sessions.merge(session.getId(), userData, ((userData1, userData2) -> {
+            if (userData2.state != UserState.CONNECTED) {
+                log.error("Session already exists: {} --- {}", userData1.session().getId(), userData2.session().getId());
+                throw new SessionAlreadyExists();
+            }
+            return userData2;
         }));
 
         log.debug("Registered session: {} for user: {}", session.getId(), username);
@@ -42,6 +47,18 @@ public class SessionHandler {
                 sessionId,
                 ((s, userData) -> new UserData(userData.session(), userData.username(), state))
         ));
+    }
+
+    void removeSession(WebSocketSession session) {
+        sessions.remove(session.getId());
+    }
+
+    void createPlaintSession(WebSocketSession session) {
+        if (sessions.containsKey(session.getId())) {
+            throw new SessionAlreadyExists();
+        } else {
+            sessions.put(session.getId(), new UserData(session, session.getId(), UserState.CONNECTED));
+        }
     }
 
     public record UserData(WebSocketSession session, String username, UserState state) {

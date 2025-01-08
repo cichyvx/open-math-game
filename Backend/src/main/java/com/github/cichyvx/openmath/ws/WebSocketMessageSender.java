@@ -1,7 +1,5 @@
 package com.github.cichyvx.openmath.ws;
 
-import com.github.cichyvx.openmath.session.SessionHandler;
-import com.github.cichyvx.openmath.util.WebSocketDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -1,4 +1,4 @@
-package com.github.cichyvx.openmath.session;
+package com.github.cichyvx.openmath.ws;
 
 public enum UserState {
     CONNECTED,

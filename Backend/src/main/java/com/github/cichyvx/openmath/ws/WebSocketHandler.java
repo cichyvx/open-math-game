@@ -1,10 +1,10 @@
 package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.model.ErrorData;
-import com.github.cichyvx.openmath.util.WebSocketDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
@@ -17,16 +17,29 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
     private final static Logger log = LoggerFactory.getLogger(WebSocketHandler.class);
     private final WebSocketMessagePathMapper pathMapper;
     private final WebSocketDeserializer webSocketDeserializer;
+    private final SessionHandler sessionHandler;
 
-    public WebSocketHandler(WebSocketMessagePathMapper pathMapper, WebSocketDeserializer webSocketDeserializer) {
+    public WebSocketHandler(WebSocketMessagePathMapper pathMapper, WebSocketDeserializer webSocketDeserializer,
+                            SessionHandler sessionHandler) {
         this.pathMapper = pathMapper;
         this.webSocketDeserializer = webSocketDeserializer;
+        this.sessionHandler = sessionHandler;
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         var response = pathMapper.processMessage(session, message);
         sendErrorMessageIfPresent(session, response);
+    }
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        sessionHandler.createPlaintSession(session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        sessionHandler.removeSession(session);
     }
 
     /**
@@ -53,5 +66,9 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
                 log.error(e.getMessage());
             }
         }
+    }
+
+    public SessionHandler getSessionHandler() {
+        return sessionHandler;
     }
 }

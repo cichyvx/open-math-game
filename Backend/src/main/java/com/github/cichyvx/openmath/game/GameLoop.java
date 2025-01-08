@@ -2,14 +2,13 @@ package com.github.cichyvx.openmath.game;
 
 import com.github.cichyvx.openmath.model.QuestionResponse;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Random;
 
-public class Loop {
+public class GameLoop {
 
-    private final WebSocketSession session1;
-    private final WebSocketSession session2;
+    private final String session1;
+    private final String session2;
     private final WebSocketMessageSender webSocketMessageSender;
     private final static String[] operations = new String[] {"-", "+", "*", "/"};
     private final static Random random = new Random();
@@ -17,7 +16,7 @@ public class Loop {
     private Equation equation;
 
 
-    public Loop(WebSocketSession session1, WebSocketSession session2, WebSocketMessageSender webSocketMessageSender) {
+    public GameLoop(String session1, String session2, WebSocketMessageSender webSocketMessageSender) {
         this.session1 = session1;
         this.session2 = session2;
         this.webSocketMessageSender = webSocketMessageSender;
@@ -28,8 +27,8 @@ public class Loop {
 
         QuestionResponse question = new QuestionResponse(equation.equation());
 
-        webSocketMessageSender.sendMessage(session1.getId(), question);
-        webSocketMessageSender.sendMessage(session2.getId(), question);
+        webSocketMessageSender.sendMessage(session1, question);
+        webSocketMessageSender.sendMessage(session2, question);
     }
 
     public boolean answer(double answer) {

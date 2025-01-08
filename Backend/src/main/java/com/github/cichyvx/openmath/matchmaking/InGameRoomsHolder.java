@@ -1,20 +1,19 @@
 package com.github.cichyvx.openmath.matchmaking;
 
-import com.github.cichyvx.openmath.game.Loop;
+import com.github.cichyvx.openmath.game.GameLoop;
 import com.github.cichyvx.openmath.game.MatchRoom;
 import com.github.cichyvx.openmath.game.Score;
 import com.github.cichyvx.openmath.model.AnswerRequest;
 import com.github.cichyvx.openmath.model.AnswerResponse;
 import com.github.cichyvx.openmath.model.StatusChangeResponse;
-import com.github.cichyvx.openmath.session.SessionHandler;
-import com.github.cichyvx.openmath.session.UserState;
+import com.github.cichyvx.openmath.ws.SessionHandler;
+import com.github.cichyvx.openmath.ws.UserState;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -64,28 +63,28 @@ public class InGameRoomsHolder {
         var session1 = matchRoom.session1();
         var session2 = matchRoom.session2();
 
-        matchRoomsMap.remove(session1.getId());
-        matchRoomsMap.remove(session2.getId());
+        matchRoomsMap.remove(session1);
+        matchRoomsMap.remove(session2);
 
 
-        var status1 = sessionHandler.changeUserState(session1.getId(), UserState.CONNECTED).orElseThrow();
-        var status2 = sessionHandler.changeUserState(session2.getId(), UserState.CONNECTED).orElseThrow();
+        var status1 = sessionHandler.changeUserState(session1, UserState.CONNECTED).orElseThrow();
+        var status2 = sessionHandler.changeUserState(session2, UserState.CONNECTED).orElseThrow();
 
-        webSocketMessageSender.sendMessage(session1.getId(), new StatusChangeResponse(status1.state()));
-        webSocketMessageSender.sendMessage(session2.getId(), new StatusChangeResponse(status2.state()));
+        webSocketMessageSender.sendMessage(session1, new StatusChangeResponse(status1.state()));
+        webSocketMessageSender.sendMessage(session2, new StatusChangeResponse(status2.state()));
     }
 
     public void add(Room room) {
         var status1 = sessionHandler.changeUserState(room.session1(), UserState.IN_GAME).orElseThrow();
         var status2 = sessionHandler.changeUserState(room.session2(), UserState.IN_GAME).orElseThrow();
 
-        WebSocketSession session1 = status1.session();
-        WebSocketSession session2 = status2.session();
+        var session1 = room.session1();
+        var session2 = room.session2();
 
-        webSocketMessageSender.sendMessage(session1.getId(), new StatusChangeResponse(status1.state()));
-        webSocketMessageSender.sendMessage(session2.getId(), new StatusChangeResponse(status2.state()));
+        webSocketMessageSender.sendMessage(session1, new StatusChangeResponse(status1.state()));
+        webSocketMessageSender.sendMessage(session2, new StatusChangeResponse(status2.state()));
 
-        Loop gameLoop = new Loop(session1, session2, webSocketMessageSender);
+        GameLoop gameLoop = new GameLoop(session1, session2, webSocketMessageSender);
         Score score = new Score(room.session1(), room.session2());
         MatchRoom matchRoom = new MatchRoom(gameLoop, Instant.now().plus(1L, ChronoUnit.MINUTES), score, session1, session2);
 
@@ -98,27 +97,26 @@ public class InGameRoomsHolder {
     }
 
 
-    public void answer(WebSocketSession session, AnswerRequest message) {
-        String sessionId = session.getId();
+    public void answer(String sessionId, AnswerRequest message) {
         MatchRoom matchRoom = matchRoomsMap.get(sessionId);
 
         if (isAnswerCorrect(message, matchRoom)) {
-            matchRoom.loop().generateAndSendEquation();
+            matchRoom.gameLoop().generateAndSendEquation();
             Score score = matchRoom.score();
             score.score(sessionId);
 
-            WebSocketSession session1 = matchRoom.session1();
-            WebSocketSession session2 = matchRoom.session2();
+            String session1 = matchRoom.session1();
+            String session2 = matchRoom.session2();
 
-            int score1 = score.getScore(session1.getId());
-            int score2 = score.getScore(session2.getId());
+            int score1 = score.getScore(session1);
+            int score2 = score.getScore(session2);
 
-            webSocketMessageSender.sendMessage(session1.getId(), new AnswerResponse(score1, score2));
-            webSocketMessageSender.sendMessage(session2.getId(), new AnswerResponse(score2, score1));
+            webSocketMessageSender.sendMessage(session1, new AnswerResponse(score1, score2));
+            webSocketMessageSender.sendMessage(session2, new AnswerResponse(score2, score1));
         }
     }
 
     private boolean isAnswerCorrect(AnswerRequest message, MatchRoom matchRoom) {
-        return matchRoom.loop().answer(message.answer());
+        return matchRoom.gameLoop().answer(message.answer());
     }
 }

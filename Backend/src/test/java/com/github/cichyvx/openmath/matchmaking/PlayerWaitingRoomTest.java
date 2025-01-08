@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.matchmaking;
 
-import com.github.cichyvx.openmath.session.SessionHandler;
+import com.github.cichyvx.openmath.ws.SessionHandler;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

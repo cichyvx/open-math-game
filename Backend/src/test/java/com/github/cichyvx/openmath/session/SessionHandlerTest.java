@@ -3,6 +3,7 @@ package com.github.cichyvx.openmath.session;
 import com.github.cichyvx.openmath.exception.DeserializationError;
 import com.github.cichyvx.openmath.exception.SessionAlreadyExists;
 import com.github.cichyvx.openmath.model.ConnectionRequest;
+import com.github.cichyvx.openmath.ws.SessionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;

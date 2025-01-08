@@ -1,4 +1,4 @@
-package com.github.cichyvx.openmath.util;
+package com.github.cichyvx.openmath.ws;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

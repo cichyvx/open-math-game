@@ -1,8 +1,8 @@
 package com.github.cichyvx.openmath.matchmaking;
 
 import com.github.cichyvx.openmath.model.StatusChangeResponse;
-import com.github.cichyvx.openmath.session.SessionHandler;
-import com.github.cichyvx.openmath.session.UserState;
+import com.github.cichyvx.openmath.ws.SessionHandler;
+import com.github.cichyvx.openmath.ws.UserState;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.cichyvx.openmath.exception.DeserializationError;
 import com.github.cichyvx.openmath.model.GenericWsRequest;
+import com.github.cichyvx.openmath.ws.WebSocketDeserializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

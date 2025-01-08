@@ -3,7 +3,6 @@ package com.github.cichyvx.openmath.wslistener;
 import com.github.cichyvx.openmath.matchmaking.PlayerRegistration;
 import com.github.cichyvx.openmath.model.MatchMakingRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 @Component
 public class MatchMakingListener implements WsListener<MatchMakingRequest> {
@@ -20,7 +19,7 @@ public class MatchMakingListener implements WsListener<MatchMakingRequest> {
     }
 
     @Override
-    public void process(WebSocketSession session, Object message) {
-        playerRegistration.add(session.getId());
+    public void process(String session, Object message) {
+        playerRegistration.add(session);
     }
 }

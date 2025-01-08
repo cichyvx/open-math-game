@@ -3,7 +3,6 @@ package com.github.cichyvx.openmath.ws;
 import com.github.cichyvx.openmath.wslistener.WsListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class WebSocketListenerMapperTest {
         }
 
         @Override
-        public void process(WebSocketSession session, Object message) {
+        public void process(String session, Object message) {
 
         }
     };
@@ -32,7 +31,7 @@ public class WebSocketListenerMapperTest {
         }
 
         @Override
-        public void process(WebSocketSession session, Object message) {
+        public void process(String session, Object message) {
 
         }
     };

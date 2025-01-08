@@ -1,14 +1,12 @@
 package com.github.cichyvx.openmath.game;
 
-import org.springframework.web.socket.WebSocketSession;
-
 import java.time.Instant;
 
-public record MatchRoom(Loop loop,
+public record MatchRoom(GameLoop gameLoop,
                         Instant endTime,
                         Score score,
-                        WebSocketSession session1,
-                        WebSocketSession session2) implements Comparable<MatchRoom> {
+                        String session1,
+                        String session2) implements Comparable<MatchRoom> {
 
     @Override
     public int compareTo(MatchRoom o) {

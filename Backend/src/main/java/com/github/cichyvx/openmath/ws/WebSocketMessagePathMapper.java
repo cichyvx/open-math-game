@@ -4,7 +4,6 @@ import com.github.cichyvx.openmath.exception.ExceptionHandler;
 import com.github.cichyvx.openmath.exception.PathNotFound;
 import com.github.cichyvx.openmath.model.ErrorData;
 import com.github.cichyvx.openmath.model.GenericWsRequest;
-import com.github.cichyvx.openmath.util.WebSocketDeserializer;
 import com.github.cichyvx.openmath.wslistener.WsListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ public class WebSocketMessagePathMapper {
     Optional<ErrorData> processMessage(WebSocketSession session, TextMessage message) {
         try {
             GenericWsRequest deserializedMessage = deserializeMessage(message);
-            mapToListenerAndProcess(session, deserializedMessage);
+            mapToListenerAndProcess(session.getId(), deserializedMessage);
             return Optional.empty();
         } catch (Exception ex) {
             return Optional.of(exceptionHandler.handleException(ex));
@@ -49,7 +48,7 @@ public class WebSocketMessagePathMapper {
         return genericWsRequest;
     }
 
-    private void mapToListenerAndProcess(WebSocketSession session, GenericWsRequest genericWsRequest) {
+    private void mapToListenerAndProcess(String session, GenericWsRequest genericWsRequest) {
         var listenerData = webSocketListenerMapper.getListener(genericWsRequest.path())
                 .orElseThrow(() -> new PathNotFound(genericWsRequest.path()));
 
