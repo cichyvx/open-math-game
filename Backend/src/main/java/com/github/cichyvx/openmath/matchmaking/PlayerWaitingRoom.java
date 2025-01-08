@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.matchmaking;
 
-import com.github.cichyvx.openmath.model.GameInfoResponse;
+import com.github.cichyvx.openmath.model.response.GameInfoResponse;
 import com.github.cichyvx.openmath.ws.SessionHandler;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.slf4j.Logger;

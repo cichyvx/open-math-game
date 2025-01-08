@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.wslistener;
 
 import com.github.cichyvx.openmath.matchmaking.PlayerRegistration;
-import com.github.cichyvx.openmath.model.MatchMakingRequest;
+import com.github.cichyvx.openmath.model.request.MatchMakingRequest;
 import org.springframework.stereotype.Component;
 
 @Component

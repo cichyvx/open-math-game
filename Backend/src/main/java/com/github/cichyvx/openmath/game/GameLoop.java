@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.game;
 
-import com.github.cichyvx.openmath.model.QuestionResponse;
+import com.github.cichyvx.openmath.model.response.QuestionResponse;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 
 import java.util.Random;

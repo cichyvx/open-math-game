@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.exception.PathNotSpecified;
-import com.github.cichyvx.openmath.model.GenericWsRequest;
+import com.github.cichyvx.openmath.model.request.GenericWsRequest;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.matchmaking;
 
-import com.github.cichyvx.openmath.model.StatusChangeResponse;
+import com.github.cichyvx.openmath.model.response.StatusChangeResponse;
 import com.github.cichyvx.openmath.ws.SessionHandler;
 import com.github.cichyvx.openmath.ws.UserState;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;

@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.wslistener;
 
 import com.github.cichyvx.openmath.matchmaking.InGameRoomsHolder;
-import com.github.cichyvx.openmath.model.AnswerRequest;
+import com.github.cichyvx.openmath.model.request.AnswerRequest;
 import org.springframework.stereotype.Component;
 
 @Component

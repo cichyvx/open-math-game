@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.exception;
 
-import com.github.cichyvx.openmath.model.ErrorData;
+import com.github.cichyvx.openmath.model.response.ErrorData;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

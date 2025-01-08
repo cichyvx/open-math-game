@@ -1,4 +1,4 @@
-package com.github.cichyvx.openmath.model;
+package com.github.cichyvx.openmath.model.response;
 
 import java.time.Instant;
 

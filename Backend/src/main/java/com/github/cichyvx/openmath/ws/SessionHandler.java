@@ -2,7 +2,7 @@ package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.exception.DeserializationError;
 import com.github.cichyvx.openmath.exception.SessionAlreadyExists;
-import com.github.cichyvx.openmath.model.ConnectionRequest;
+import com.github.cichyvx.openmath.model.request.ConnectionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

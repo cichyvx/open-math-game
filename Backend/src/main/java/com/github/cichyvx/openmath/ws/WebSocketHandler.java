@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.ws;
 
-import com.github.cichyvx.openmath.model.ErrorData;
+import com.github.cichyvx.openmath.model.response.ErrorData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

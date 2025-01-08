@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.exception;
 
-import com.github.cichyvx.openmath.model.ErrorData;
+import com.github.cichyvx.openmath.model.response.ErrorData;
 import org.springframework.stereotype.Component;
 
 @Component

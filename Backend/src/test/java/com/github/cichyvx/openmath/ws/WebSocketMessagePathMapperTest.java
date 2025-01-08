@@ -1,8 +1,8 @@
 package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.exception.ExceptionHandler;
-import com.github.cichyvx.openmath.model.ErrorData;
-import com.github.cichyvx.openmath.model.GenericWsRequest;
+import com.github.cichyvx.openmath.model.response.ErrorData;
+import com.github.cichyvx.openmath.model.request.GenericWsRequest;
 import com.github.cichyvx.openmath.wslistener.WsListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

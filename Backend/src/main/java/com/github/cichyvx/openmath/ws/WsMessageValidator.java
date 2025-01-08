@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.exception.PathNotSpecified;
-import com.github.cichyvx.openmath.model.GenericWsRequest;
+import com.github.cichyvx.openmath.model.request.GenericWsRequest;
 import org.springframework.stereotype.Component;
 
 @Component
