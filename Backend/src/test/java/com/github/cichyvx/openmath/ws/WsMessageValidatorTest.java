@@ -1,6 +1,6 @@
 package com.github.cichyvx.openmath.ws;
 
-import com.github.cichyvx.openmath.exception.PathNotSpecified;
+import com.github.cichyvx.openmath.exception.PathNotSpecifiedException;
 import com.github.cichyvx.openmath.model.request.GenericWsRequest;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +18,7 @@ public class WsMessageValidatorTest {
     public void validateTest(String path, boolean isValid) {
         Executable executable = () -> subject.validate(new GenericWsRequest(path, null));
         if (!isValid) {
-            assertThrows(PathNotSpecified.class, executable);
+            assertThrows(PathNotSpecifiedException.class, executable);
         } else {
             assertDoesNotThrow(executable);
         }

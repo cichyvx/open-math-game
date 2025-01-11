@@ -2,7 +2,7 @@ package com.github.cichyvx.openmath.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.cichyvx.openmath.exception.DeserializationError;
+import com.github.cichyvx.openmath.exception.DeserializationException;
 import com.github.cichyvx.openmath.model.request.GenericWsRequest;
 import com.github.cichyvx.openmath.ws.WebSocketDeserializer;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ public class WebSocketDeserializerTest {
     public void mapAsWsResponseThrowTest() throws JsonProcessingException {
         when(objectMapper.writeValueAsBytes(any())).thenThrow(JsonProcessingException.class);
 
-        assertThrows(DeserializationError.class, () -> subject.mapAsWsResponse(any()));
+        assertThrows(DeserializationException.class, () -> subject.mapAsWsResponse(any()));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class WebSocketDeserializerTest {
     public void mapAsWsRequestThrowTest() throws IOException {
         when(objectMapper.readValue(any(byte[].class), any(Class.class))).thenThrow(IOException.class);
 
-        assertThrows(DeserializationError.class, () -> subject.mapAsWsRequest(BYTES));
+        assertThrows(DeserializationException.class, () -> subject.mapAsWsRequest(BYTES));
     }
 
     @Test
@@ -73,6 +73,6 @@ public class WebSocketDeserializerTest {
     public void convertThrowTest() {
         when(objectMapper.convertValue(any(Object.class), any(Class.class))).thenThrow(RuntimeException.class);
 
-        assertThrows(DeserializationError.class, () -> subject.convert(new Object(), Class.class));
+        assertThrows(DeserializationException.class, () -> subject.convert(new Object(), Class.class));
     }
 }

@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.ws;
 
 import com.github.cichyvx.openmath.exception.ExceptionHandler;
-import com.github.cichyvx.openmath.exception.PathNotFound;
+import com.github.cichyvx.openmath.exception.PathNotFoundException;
 import com.github.cichyvx.openmath.model.response.ErrorData;
 import com.github.cichyvx.openmath.model.request.GenericWsRequest;
 import com.github.cichyvx.openmath.wslistener.WsListener;
@@ -50,7 +50,7 @@ public class WebSocketMessagePathMapper {
 
     private void mapToListenerAndProcess(String session, GenericWsRequest genericWsRequest) {
         var listenerData = webSocketListenerMapper.getListener(genericWsRequest.path())
-                .orElseThrow(() -> new PathNotFound(genericWsRequest.path()));
+                .orElseThrow(() -> new PathNotFoundException(genericWsRequest.path()));
 
         WsListener<?> listener = listenerData.listener();
         Class<?> type = listenerData.type();

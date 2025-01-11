@@ -11,10 +11,10 @@ public class ExceptionHandler {
 
     public ErrorData handleException(final Exception exception) {
         return switch (exception) {
-            case PathNotFound ex -> new ErrorData(ErrorData.PATH_NOT_FOUND, ex.getMessage());
-            case PathNotSpecified ex -> new ErrorData(ErrorData.PARSING_ERROR, ex.getMessage());
-            case SessionAlreadyExists ex -> new ErrorData(ErrorData.SESSION_ALREADY_EXISTS, ex.getMessage());
-            case DeserializationError ex -> new ErrorData(ErrorData.DESERIALIZATION_ERROR, UNPROCESSABLE_ENTITY);
+            case PathNotFoundException ex -> new ErrorData(ErrorData.PATH_NOT_FOUND, ex.getMessage());
+            case PathNotSpecifiedException ex -> new ErrorData(ErrorData.PARSING_ERROR, ex.getMessage());
+            case SessionAlreadyExistsException ex -> new ErrorData(ErrorData.SESSION_ALREADY_EXISTS, ex.getMessage());
+            case DeserializationException ex -> new ErrorData(ErrorData.DESERIALIZATION_ERROR, UNPROCESSABLE_ENTITY);
             default -> new ErrorData(ErrorData.UNEXPECTED_ERROR, UNEXPECTED_EXCEPTION);
         };
     }

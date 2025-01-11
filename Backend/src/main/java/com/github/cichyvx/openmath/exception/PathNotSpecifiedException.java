@@ -1,10 +1,10 @@
 package com.github.cichyvx.openmath.exception;
 
-public class PathNotSpecified extends RuntimeException {
+public class PathNotSpecifiedException extends RuntimeException {
 
     public final static String MESSAGE = "Path not specified!";
 
-    public PathNotSpecified() {
+    public PathNotSpecifiedException() {
         super(MESSAGE);
     }
 }

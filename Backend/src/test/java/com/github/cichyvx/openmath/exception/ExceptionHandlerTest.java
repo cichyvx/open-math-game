@@ -14,17 +14,18 @@ public class ExceptionHandlerTest {
     private final ExceptionHandler subject = new ExceptionHandler();
 
     static List<Arguments> data() {
-        PathNotFound pathNotFound = new PathNotFound("");
-        PathNotSpecified pathNotSpecified = new PathNotSpecified();
-        SessionAlreadyExists sessionAlreadyExists = new SessionAlreadyExists();
-        DeserializationError deserializationError = new DeserializationError("");
+        PathNotFoundException pathNotFoundException = new PathNotFoundException("");
+        PathNotSpecifiedException pathNotSpecifiedException = new PathNotSpecifiedException();
+        SessionAlreadyExistsException sessionAlreadyExistsException = new SessionAlreadyExistsException();
+        DeserializationException deserializationException = new DeserializationException("");
         RuntimeException runtimeException = new RuntimeException();
 
         return List.of(
-                Arguments.of(pathNotFound, new ErrorData(ErrorData.PATH_NOT_FOUND, pathNotFound.getMessage())),
-                Arguments.of(pathNotSpecified, new ErrorData(ErrorData.PARSING_ERROR, pathNotSpecified.getMessage())),
-                Arguments.of(sessionAlreadyExists, new ErrorData(ErrorData.SESSION_ALREADY_EXISTS, sessionAlreadyExists.getMessage())),
-                Arguments.of(deserializationError, new ErrorData(ErrorData.DESERIALIZATION_ERROR, ExceptionHandler.UNPROCESSABLE_ENTITY)),
+                Arguments.of(pathNotFoundException, new ErrorData(ErrorData.PATH_NOT_FOUND, pathNotFoundException.getMessage())),
+                Arguments.of(
+                        pathNotSpecifiedException, new ErrorData(ErrorData.PARSING_ERROR, pathNotSpecifiedException.getMessage())),
+                Arguments.of(sessionAlreadyExistsException, new ErrorData(ErrorData.SESSION_ALREADY_EXISTS, sessionAlreadyExistsException.getMessage())),
+                Arguments.of(deserializationException, new ErrorData(ErrorData.DESERIALIZATION_ERROR, ExceptionHandler.UNPROCESSABLE_ENTITY)),
                 Arguments.of(runtimeException, new ErrorData(ErrorData.UNEXPECTED_ERROR, ExceptionHandler.UNEXPECTED_EXCEPTION))
         );
     }

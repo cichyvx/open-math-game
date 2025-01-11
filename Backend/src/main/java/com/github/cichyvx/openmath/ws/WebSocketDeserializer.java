@@ -2,7 +2,7 @@ package com.github.cichyvx.openmath.ws;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.cichyvx.openmath.exception.DeserializationError;
+import com.github.cichyvx.openmath.exception.DeserializationException;
 import com.github.cichyvx.openmath.model.request.GenericWsRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -22,7 +22,7 @@ public class WebSocketDeserializer {
         try {
             return new TextMessage(objectMapper.writeValueAsBytes(object));
         } catch (JsonProcessingException ex) {
-            throw new DeserializationError(ex.getMessage());
+            throw new DeserializationException(ex.getMessage());
         }
     }
 
@@ -30,7 +30,7 @@ public class WebSocketDeserializer {
         try {
             return objectMapper.readValue(bytes, GenericWsRequest.class);
         } catch (IOException ex) {
-            throw new DeserializationError(ex.getMessage());
+            throw new DeserializationException(ex.getMessage());
         }
     }
 
@@ -38,7 +38,7 @@ public class WebSocketDeserializer {
         try {
             return objectMapper.convertValue(object, type);
         } catch (Exception ex) {
-            throw new DeserializationError(ex.getMessage());
+            throw new DeserializationException(ex.getMessage());
         }
     }
 }

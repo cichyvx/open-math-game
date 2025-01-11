@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.matchmaking;
 
 import com.github.cichyvx.openmath.exception.AlreadyWaitingInMatchMakingException;
-import com.github.cichyvx.openmath.exception.WrongUserState;
+import com.github.cichyvx.openmath.exception.WrongUserStateException;
 import com.github.cichyvx.openmath.model.response.StatusChangeResponse;
 import com.github.cichyvx.openmath.ws.SessionHandler;
 import com.github.cichyvx.openmath.ws.UserState;
@@ -31,10 +31,10 @@ public class PlayerRegistration {
 
     public void add(String sessionId) {
         WaitingSession waitingSession = new WaitingSession(sessionId, Instant.now());
-        SessionHandler.UserData userData = sessionHandler.getSession(sessionId).orElseThrow(() -> new WrongUserState("user not registered"));
+        SessionHandler.UserData userData = sessionHandler.getSession(sessionId).orElseThrow(() -> new WrongUserStateException("user not registered"));
 
         if (userData.state() != UserState.CONNECTED) {
-            throw new WrongUserState(WRONG_USER_STATE_MESSAGE.formatted(userData.state()));
+            throw new WrongUserStateException(WRONG_USER_STATE_MESSAGE.formatted(userData.state()));
         } else if (waitingSessionsSet.add(waitingSession)) {
             waitingSessionIdsQueue.offer(waitingSession);
             userData = sessionHandler.changeUserState(sessionId, UserState.MATCHMAKING).orElseThrow();

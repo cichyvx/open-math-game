@@ -1,7 +1,7 @@
 package com.github.cichyvx.openmath.ws;
 
-import com.github.cichyvx.openmath.exception.DeserializationError;
-import com.github.cichyvx.openmath.exception.SessionAlreadyExists;
+import com.github.cichyvx.openmath.exception.DeserializationException;
+import com.github.cichyvx.openmath.exception.SessionAlreadyExistsException;
 import com.github.cichyvx.openmath.model.request.ConnectionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class SessionHandler {
         sessions.merge(session.getId(), userData, ((userData1, userData2) -> {
             if (userData2.state != UserState.CONNECTED) {
                 log.error("Session already exists: {} --- {}", userData1.session().getId(), userData2.session().getId());
-                throw new SessionAlreadyExists();
+                throw new SessionAlreadyExistsException();
             }
             return userData2;
         }));
@@ -55,7 +55,7 @@ public class SessionHandler {
 
     void createPlaintSession(WebSocketSession session) {
         if (sessions.containsKey(session.getId())) {
-            throw new SessionAlreadyExists();
+            throw new SessionAlreadyExistsException();
         } else {
             sessions.put(session.getId(), new UserData(session, session.getId(), UserState.CONNECTED));
         }
@@ -68,7 +68,7 @@ public class SessionHandler {
             }
 
             if (username == null || username.isEmpty()) {
-                throw new DeserializationError("username");
+                throw new DeserializationException("username");
             }
         }
     }
