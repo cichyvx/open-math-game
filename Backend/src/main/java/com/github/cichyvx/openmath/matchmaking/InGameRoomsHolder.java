@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -37,7 +36,7 @@ public class InGameRoomsHolder {
     }
 
     @Async
-    @Scheduled(fixedRate = 100L)
+    @Scheduled(fixedRateString = "${openmath.end-game-closing-task-rate}")
     public void endGames() {
         boolean isAllEndedMatchRoomCleaned = false;
         int counter = 0;

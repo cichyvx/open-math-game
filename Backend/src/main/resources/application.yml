@@ -1,3 +1,10 @@
-logging:
-  level:
-    com.github.cichyvx.openmath: debug
+spring:
+  profiles:
+    active: dev
+openmath:
+  end-game-closing-task-rate: 100
+  player-matchmaking-task-rate: 1000
+  game-starting-task-rate: 10
+  send-message-to-client-task-rate: 20
+  max-send-retry: 5
+  retry-message-delay: 2

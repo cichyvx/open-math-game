@@ -26,7 +26,7 @@ public class PlayerMatcher {
         this.playerWaitingRoom = playerWaitingRoom;
     }
 
-    @Scheduled(fixedRate = 1000L)
+    @Scheduled(fixedRateString = "${openmath.player-matchmaking-task-rate}")
     public void match() {
         var optionalPlayers = playerRegistration.getPairOfLongestWaitingSessionId();
         if (optionalPlayers.isPresent()) {

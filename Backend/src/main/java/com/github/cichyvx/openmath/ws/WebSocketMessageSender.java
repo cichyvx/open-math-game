@@ -1,5 +1,6 @@
 package com.github.cichyvx.openmath.ws;
 
+import com.github.cichyvx.openmath.config.OpenMathConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,13 +18,15 @@ public class WebSocketMessageSender {
 
     private final static PriorityBlockingQueue<Message> messages = new PriorityBlockingQueue<>();
     private static final Logger log = LoggerFactory.getLogger(WebSocketMessageSender.class);
-    public static final int RESEND_LIMIT = 5;
     private final WebSocketDeserializer deserializer;
     private final SessionHandler sessionHandler;
+    private final OpenMathConfig config;
 
-    public WebSocketMessageSender(WebSocketDeserializer deserializer, SessionHandler sessionHandler) {
+    public WebSocketMessageSender(WebSocketDeserializer deserializer, SessionHandler sessionHandler,
+                                  OpenMathConfig config) {
         this.deserializer = deserializer;
         this.sessionHandler = sessionHandler;
+        this.config = config;
     }
 
     public void sendMessage(String sessionId, Object message) {
@@ -32,7 +35,7 @@ public class WebSocketMessageSender {
         messages.offer(new Message(session, convertedMessage, Instant.now(), 0));
     }
 
-    @Scheduled(fixedRate = 20)
+    @Scheduled(fixedRateString = "${openmath.send-message-to-client-task-rate}")
     private void sender() {
         boolean areMoreMessages = true;
         while (areMoreMessages) {
@@ -58,13 +61,13 @@ public class WebSocketMessageSender {
                 ex);
         int resendCount = message.resendCount + 1;
 
-        if (resendCount >= RESEND_LIMIT) {
+        if (resendCount >= config.getMaxSendRetry()) {
             log.error("resend limit exceeded. Session Id: {}, message: {}", message.message, message.session.getId());
         } else {
             Message tryLaterMessage = new Message(
                     message.session,
                     message.message,
-                    Instant.now().plus(2L, ChronoUnit.SECONDS),
+                    Instant.now().plus(config.getRetryMessageDelay(), ChronoUnit.SECONDS),
                     resendCount
             );
 

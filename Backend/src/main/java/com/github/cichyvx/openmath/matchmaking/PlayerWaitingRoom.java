@@ -5,6 +5,7 @@ import com.github.cichyvx.openmath.ws.SessionHandler;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,8 @@ public class PlayerWaitingRoom {
         webSocketMessageSender.sendMessage(room.session2(), new GameInfoResponse(userData1.username(), room.eventTime()));
     }
 
-    @Scheduled(fixedRate = 10L)
+    @Async
+    @Scheduled(fixedRateString = "${openmath.game-starting-task-rate}")
     public void addAsStarted() {
         Room room = waitingRooms.poll();
         if (room != null) {
