@@ -27,7 +27,6 @@ public class WebSocketMessageSender {
     }
 
     public void sendMessage(String sessionId, Object message) {
-
         TextMessage convertedMessage = deserializer.mapAsWsResponse(message);
         WebSocketSession session = sessionHandler.getSession(sessionId).orElseThrow().session();
         messages.offer(new Message(session, convertedMessage, Instant.now(), 0));

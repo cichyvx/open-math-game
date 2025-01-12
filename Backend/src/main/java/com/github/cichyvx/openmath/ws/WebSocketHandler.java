@@ -19,7 +19,7 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
     private final WebSocketDeserializer webSocketDeserializer;
     private final SessionHandler sessionHandler;
 
-    public WebSocketHandler(WebSocketMessagePathMapper pathMapper, WebSocketDeserializer webSocketDeserializer,
+    WebSocketHandler(WebSocketMessagePathMapper pathMapper, WebSocketDeserializer webSocketDeserializer,
                             SessionHandler sessionHandler) {
         this.pathMapper = pathMapper;
         this.webSocketDeserializer = webSocketDeserializer;

@@ -14,11 +14,11 @@ public class WebSocketDeserializer {
 
     private final ObjectMapper objectMapper;
 
-    public WebSocketDeserializer(ObjectMapper objectMapper) {
+    WebSocketDeserializer(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    public TextMessage mapAsWsResponse(Object object) {
+    TextMessage mapAsWsResponse(Object object) {
         try {
             return new TextMessage(objectMapper.writeValueAsBytes(object));
         } catch (JsonProcessingException ex) {
@@ -26,7 +26,7 @@ public class WebSocketDeserializer {
         }
     }
 
-    public GenericWsRequest mapAsWsRequest(byte[] bytes) {
+    GenericWsRequest mapAsWsRequest(byte[] bytes) {
         try {
             return objectMapper.readValue(bytes, GenericWsRequest.class);
         } catch (IOException ex) {
@@ -34,7 +34,7 @@ public class WebSocketDeserializer {
         }
     }
 
-    public Object convert(Object object, Class<?> type) {
+    Object convert(Object object, Class<?> type) {
         try {
             return objectMapper.convertValue(object, type);
         } catch (Exception ex) {

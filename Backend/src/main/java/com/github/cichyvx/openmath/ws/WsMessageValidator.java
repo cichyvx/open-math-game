@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WsMessageValidator {
 
-    public void validate(GenericWsRequest message) {
+    void validate(GenericWsRequest message) {
         if (message.path() == null || message.path().isEmpty()) {
             throw new PathNotSpecifiedException();
         }
