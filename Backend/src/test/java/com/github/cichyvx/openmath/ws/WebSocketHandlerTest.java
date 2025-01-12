@@ -22,13 +22,15 @@ public class WebSocketHandlerTest {
     private WebSocketHandler subject;
     private WebSocketMessagePathMapper pathMapper;
     private WebSocketDeserializer webSocketDeserializer;
+    private SessionHandler sessionHandler;
 
     @BeforeEach
     public void setUp() {
         pathMapper = mock(WebSocketMessagePathMapper.class);
         webSocketDeserializer = mock(WebSocketDeserializer.class);
+        sessionHandler = mock(SessionHandler.class);
 
-        subject = new WebSocketHandler(pathMapper, webSocketDeserializer);
+        subject = new WebSocketHandler(pathMapper, webSocketDeserializer, sessionHandler);
     }
 
     @Test

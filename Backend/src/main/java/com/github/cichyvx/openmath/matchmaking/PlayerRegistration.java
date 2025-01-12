@@ -17,8 +17,8 @@ import java.util.concurrent.PriorityBlockingQueue;
 @Component
 public class PlayerRegistration {
 
-    private final static PriorityBlockingQueue<WaitingSession> waitingSessionIdsQueue = new PriorityBlockingQueue<>();
-    private final static Set<WaitingSession> waitingSessionsSet = ConcurrentHashMap.newKeySet();
+    protected final static PriorityBlockingQueue<WaitingSession> waitingSessionIdsQueue = new PriorityBlockingQueue<>();
+    protected final static Set<WaitingSession> waitingSessionsSet = ConcurrentHashMap.newKeySet();
 
     public static final String WRONG_USER_STATE_MESSAGE = "bad current user status for starting matchmaking. Current user status is %s, it should be " + UserState.CONNECTED;
     private final SessionHandler sessionHandler;

@@ -17,6 +17,8 @@ public class OpenMathConfig {
     private int maxSendRetry;
     private Long retryMessageDelay;
 
+    private Long waitingRoomTime;
+
     public Long getEndGameClosingTaskRate() {
         return endGameClosingTaskRate;
     }
@@ -63,5 +65,13 @@ public class OpenMathConfig {
 
     public void setRetryMessageDelay(Long retryMessageDelay) {
         this.retryMessageDelay = retryMessageDelay;
+    }
+
+    public Long getWaitingRoomTime() {
+        return waitingRoomTime;
+    }
+
+    public void setWaitingRoomTime(Long waitingRoomTime) {
+        this.waitingRoomTime = waitingRoomTime;
     }
 }

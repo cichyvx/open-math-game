@@ -1,5 +1,6 @@
 package com.github.cichyvx.openmath.matchmaking;
 
+import com.github.cichyvx.openmath.game.EquationGenerator;
 import com.github.cichyvx.openmath.game.GameLoop;
 import com.github.cichyvx.openmath.game.MatchRoom;
 import com.github.cichyvx.openmath.game.Score;
@@ -24,15 +25,18 @@ import java.util.concurrent.PriorityBlockingQueue;
 @Component
 public class InGameRoomsHolder {
 
-    private final static PriorityBlockingQueue<MatchRoom> currentInGameRooms = new PriorityBlockingQueue<>();
-    private final static Map<String, MatchRoom> matchRoomsMap = new ConcurrentHashMap<>();
+    protected final static PriorityBlockingQueue<MatchRoom> currentInGameRooms = new PriorityBlockingQueue<>();
+    protected final static Map<String, MatchRoom> matchRoomsMap = new ConcurrentHashMap<>();
     private static final Logger log = LoggerFactory.getLogger(InGameRoomsHolder.class);
     private final SessionHandler sessionHandler;
     private final WebSocketMessageSender webSocketMessageSender;
+    private final EquationGenerator equationGenerator;
 
-    public InGameRoomsHolder(SessionHandler sessionHandler, WebSocketMessageSender webSocketMessageSender) {
+    public InGameRoomsHolder(SessionHandler sessionHandler, WebSocketMessageSender webSocketMessageSender,
+                             EquationGenerator equationGenerator) {
         this.sessionHandler = sessionHandler;
         this.webSocketMessageSender = webSocketMessageSender;
+        this.equationGenerator = equationGenerator;
     }
 
     @Async
@@ -83,7 +87,7 @@ public class InGameRoomsHolder {
         webSocketMessageSender.sendMessage(session1, new StatusChangeResponse(status1.state()));
         webSocketMessageSender.sendMessage(session2, new StatusChangeResponse(status2.state()));
 
-        GameLoop gameLoop = new GameLoop(session1, session2, webSocketMessageSender);
+        GameLoop gameLoop = new GameLoop(session1, session2, webSocketMessageSender, equationGenerator);
         Score score = new Score(room.session1(), room.session2());
         MatchRoom matchRoom = new MatchRoom(gameLoop, Instant.now().plus(1L, ChronoUnit.MINUTES), score, session1, session2);
 

@@ -26,7 +26,7 @@ public class SessionHandler {
         UserData userData = new UserData(session, username, UserState.CONNECTED);
 
         sessions.merge(session.getId(), userData, ((userData1, userData2) -> {
-            if (userData2.state != UserState.CONNECTED) {
+            if (userData1.state != UserState.CONNECTED) {
                 log.error("Session already exists: {} --- {}", userData1.session().getId(), userData2.session().getId());
                 throw new SessionAlreadyExistsException();
             }

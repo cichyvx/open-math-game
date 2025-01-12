@@ -1,10 +1,9 @@
-package com.github.cichyvx.openmath.util;
+package com.github.cichyvx.openmath.ws;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.cichyvx.openmath.exception.DeserializationException;
 import com.github.cichyvx.openmath.model.request.GenericWsRequest;
-import com.github.cichyvx.openmath.ws.WebSocketDeserializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

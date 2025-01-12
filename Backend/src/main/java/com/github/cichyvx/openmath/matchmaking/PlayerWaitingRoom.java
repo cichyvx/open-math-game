@@ -1,5 +1,6 @@
 package com.github.cichyvx.openmath.matchmaking;
 
+import com.github.cichyvx.openmath.config.OpenMathConfig;
 import com.github.cichyvx.openmath.model.response.GameInfoResponse;
 import com.github.cichyvx.openmath.ws.SessionHandler;
 import com.github.cichyvx.openmath.ws.WebSocketMessageSender;
@@ -18,20 +19,22 @@ public class PlayerWaitingRoom {
 
     private final static PriorityBlockingQueue<Room> waitingRooms = new PriorityBlockingQueue<>();
     private static final Logger log = LoggerFactory.getLogger(PlayerWaitingRoom.class);
-    public static final long SECONDS_TO_WAIT = 5L;
     private final InGameRoomsHolder inGameRoomsHolder;
     private final SessionHandler sessionHandler;
     private final WebSocketMessageSender webSocketMessageSender;
+    private final OpenMathConfig config;
 
     public PlayerWaitingRoom(InGameRoomsHolder inGameRoomsHolder,
-                             SessionHandler sessionHandler, WebSocketMessageSender webSocketMessageSender) {
+                             SessionHandler sessionHandler, WebSocketMessageSender webSocketMessageSender,
+                             OpenMathConfig config) {
         this.inGameRoomsHolder = inGameRoomsHolder;
         this.sessionHandler = sessionHandler;
         this.webSocketMessageSender = webSocketMessageSender;
+        this.config = config;
     }
 
     public void add(String session1, String session2) {
-        Room room = new Room(session1, session2, Instant.now().plus(SECONDS_TO_WAIT, ChronoUnit.SECONDS));
+        Room room = new Room(session1, session2, Instant.now().plus(config.getWaitingRoomTime(), ChronoUnit.SECONDS));
         waitingRooms.add(room);
 
         SessionHandler.UserData userData1 = sessionHandler.getSession(room.session1()).orElseThrow();

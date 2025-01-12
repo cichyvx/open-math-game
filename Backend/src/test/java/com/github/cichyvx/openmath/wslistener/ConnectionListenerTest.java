@@ -38,14 +38,15 @@ public class ConnectionListenerTest {
     public void shouldCallSessionHandlerAndProducer() {
         WebSocketSession stubSession = mock(WebSocketSession.class);
         ConnectionRequest stubMessage = mock(ConnectionRequest.class);
+        String sessionId = "";
 
-        when(sessionHandler.registerSession(eq(stubSession), eq(stubMessage)))
+        when(sessionHandler.registerSession(eq(sessionId), eq(stubMessage)))
                 .thenReturn(new SessionHandler.UserData(stubSession, "user", UserState.CONNECTED));
 
-        subject.process(stubSession, stubMessage);
+        subject.process(sessionId, stubMessage);
 
-        verify(sessionHandler, times(1)).registerSession(eq(stubSession), eq(stubMessage));
-        verify(webSocketMessageSender, times(1)).sendMessage(eq(stubSession.getId()), eq(new StatusChangeResponse(UserState.CONNECTED)));
+        verify(sessionHandler, times(1)).registerSession(eq(sessionId), eq(stubMessage));
+        verify(webSocketMessageSender, times(1)).sendMessage(eq(sessionId), eq(new StatusChangeResponse(UserState.CONNECTED)));
     }
 
 }

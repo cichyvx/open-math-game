@@ -8,3 +8,4 @@ openmath:
   send-message-to-client-task-rate: 20
   max-send-retry: 5
   retry-message-delay: 2
+  waiting-room-time: 5
