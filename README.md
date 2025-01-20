@@ -25,11 +25,16 @@ The game lasts for one minute, and a new problem is only shown after a correct a
 
 ### connecting
 By default, game start at port ``8080``.</br>
-To connect on your local machine you should us [http://localhost:8080/websocket](http://localhost:8080/websocket)</br>
+To connect on your local machine you should us [ws://localhost:8080/websocket](ws://localhost:8080/websocket)</br>
 
 ### Running on production
 You probably don't want to have debug logs.
 To disable them you can run application using ``./mvnw clean install spring-boot:run -D"spring-boot.run.profiles"=default``
+
+# Docker
+You can also get latest application version from docker. For that just use:<br> 
+``docker pull cichyvx/open-math-game:latest``<br>
+``docker run cichyvx/open-math-game:latest``
 
 # Game flow
 
